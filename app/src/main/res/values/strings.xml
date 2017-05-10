@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">inAuth</string>
+    <string name="http">Http</string>
+    <string name="gps">GPS</string>
+    <string name="ndk">NDK</string>
+    <string name="no_network">There is no network available, some functionality may not work properly</string>
+    <string name="OK">OK</string>
+    <string name="gps_part1">You are</string>
+    <string name="gps_part2">miles from the</string>
+    <string name="gps_part3">Golden Gate</string>
+    <string name="gps_part4">Bridge</string>
+    <string name="gps_loc1">You are at latitude:</string>
+    <string name="gps_loc2">and longitude:</string>
+</resources>
