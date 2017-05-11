@@ -16,6 +16,8 @@ import com.das.inauth.constants.Constants;
 import com.das.inauth.fragments.MainMenuFragment;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.util.ArrayList;
+
 import im.delight.android.location.SimpleLocation;
 
 public class MainActivity extends AppCompatActivity {
@@ -107,10 +109,6 @@ public class MainActivity extends AppCompatActivity {
             .commit();
 
 
-    // Example of a call to a native method
-    //TextView tv = (TextView) findViewById(R.id.sample_text);
-    //tv.setText(stringFromJNI());
-
   }
 
   @Override
@@ -136,7 +134,19 @@ public class MainActivity extends AppCompatActivity {
    * A native method that is implemented by the 'native-lib' native library,
    * which is packaged with this application.
    */
-  public native String stringFromJNI();
+  public native String stringFromJNI(String target);
+
+  public String processString(ArrayList<String> appNameList, ArrayList<String> pkgStatsList) {
+    if (appNameList.size() != pkgStatsList.size()) {
+      return null;
+    }
+    StringBuilder ssb = new StringBuilder();
+    for (int index = 0; index < appNameList.size(); index++) {
+      ssb.append(appNameList.get(index));
+      ssb.append(pkgStatsList.get(index));
+    }
+    return stringFromJNI(ssb.toString());
+  }
 
   public LatLng getCurrentLocation() {
     if (locationEnabled) {

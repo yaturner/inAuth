@@ -1,6 +1,7 @@
 package com.das.inauth.fragments;
 
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
@@ -42,6 +43,7 @@ public class NDKFragment extends Fragment
 
   private ArrayList<ResolveInfo> pkgAppsList = null;
   private ArrayList<String> pkgStatsList = null;
+  private ArrayList<String> appNameList = null;
   private StringBuilder ssb = null;
 
   private double cachesize;
@@ -70,18 +72,26 @@ public class NDKFragment extends Fragment
 
     final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
     mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+
     pkgAppsList = (ArrayList<ResolveInfo>) getActivity().getPackageManager().queryIntentActivities(mainIntent, 0);
     pkgStatsList = new ArrayList<>(pkgAppsList.size());
+    appNameList = new ArrayList<>(pkgAppsList.size());
     ssb = new StringBuilder();
 
     Log.d(TAG, "pkgAppsList size = " + pkgAppsList.size());
 
     int index = 0;
     for (ResolveInfo resolveInfo : pkgAppsList) {
+      ApplicationInfo ai = resolveInfo.activityInfo.applicationInfo;
+      String applicationName = packageManager.getApplicationLabel(ai).toString();
+      appNameList.add(applicationName);
       String packageName = pkgAppsList.get(index).activityInfo.packageName;
       getPackageSizeInfo(packageName);
       index++;
     }
+
+
+    String result = mainActivity.processString(appNameList, pkgStatsList);
 
 
     return view;
@@ -131,7 +141,7 @@ public class NDKFragment extends Fragment
         totalsize = cachesize + datasize + codesize;
         Log.i(TAG, "cachesize--->" + cachesize + " datasize---->"
                 + datasize + " codeSize---->" + codesize);
-        ssb.append(pStats.packageName);
+//        ssb.append(pStats.packageName);
         ssb.append(",");
         ssb.append("" + pStats.packageName);
         ssb.append(",");
