@@ -74,6 +74,13 @@ public class MainMenuFragment extends Fragment
               .replace(R.id.fragment_container, gpsFragment, GPSFragment.class.getSimpleName())
               .addToBackStack(GPSFragment.class.getSimpleName())
               .commit();
+
+    } else if (vId == R.id.button3) {
+      NDKFragment ndkFragment = NDKFragment.newInstance(bundle);
+      fragmentManager.beginTransaction()
+              .replace(R.id.fragment_container, ndkFragment, NDKFragment.class.getSimpleName())
+              .addToBackStack(NDKFragment.class.getSimpleName())
+              .commit();
     }
 
   }
