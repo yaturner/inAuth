@@ -16,7 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ListView;
+import android.widget.TextView;
 
 import com.das.inauth.MainActivity;
 import com.das.inauth.R;
@@ -39,7 +39,7 @@ public class NDKFragment extends Fragment
   private PackageManager packageManager = null;
 
   private View view = null;
-  private ListView listView = null;
+  private TextView textView = null;
 
   private ArrayList<ResolveInfo> pkgAppsList = null;
   private ArrayList<String> pkgStatsList = null;
@@ -50,6 +50,8 @@ public class NDKFragment extends Fragment
   private double datasize;
   private double codesize;
   private double totalsize;
+
+  private String result = null;
 
   public static NDKFragment newInstance(Bundle bundle) {
     NDKFragment fragment = new NDKFragment();
@@ -68,14 +70,14 @@ public class NDKFragment extends Fragment
   @Override
   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     view = inflater.inflate(R.layout.ndk_fragment, container, false);
-    listView = (ListView) view.findViewById(R.id.listview);
+    textView = (TextView) view.findViewById(R.id.textview);
 
     final Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
     mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 
     pkgAppsList = (ArrayList<ResolveInfo>) getActivity().getPackageManager().queryIntentActivities(mainIntent, 0);
     pkgStatsList = new ArrayList<>(pkgAppsList.size());
-    appNameList = new ArrayList<>(pkgAppsList.size());
+    appNameList = new ArrayList<>();
     ssb = new StringBuilder();
 
     Log.d(TAG, "pkgAppsList size = " + pkgAppsList.size());
@@ -86,12 +88,12 @@ public class NDKFragment extends Fragment
       String applicationName = packageManager.getApplicationLabel(ai).toString();
       appNameList.add(applicationName);
       String packageName = pkgAppsList.get(index).activityInfo.packageName;
+      PackageStats packageStats = new PackageStats(packageName);
       getPackageSizeInfo(packageName);
       index++;
     }
 
 
-    String result = mainActivity.processString(appNameList, pkgStatsList);
 
 
     return view;
@@ -141,7 +143,7 @@ public class NDKFragment extends Fragment
         totalsize = cachesize + datasize + codesize;
         Log.i(TAG, "cachesize--->" + cachesize + " datasize---->"
                 + datasize + " codeSize---->" + codesize);
-//        ssb.append(pStats.packageName);
+        ssb = new StringBuilder();
         ssb.append(",");
         ssb.append("" + pStats.packageName);
         ssb.append(",");
@@ -152,6 +154,17 @@ public class NDKFragment extends Fragment
         ssb.append("" + cachesize);
         ssb.append("\n");
         pkgStatsList.add(ssb.toString());
+
+        if (pkgStatsList.size() == appNameList.size()) {
+          result = mainActivity.processString(appNameList, pkgStatsList);
+          mainActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+              textView.setText(result);
+              view.invalidate();
+            }
+          });
+        }
       }
     }
   }
