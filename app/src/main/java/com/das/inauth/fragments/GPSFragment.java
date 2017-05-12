@@ -58,24 +58,22 @@ public class GPSFragment extends Fragment {
 
     SpannableStringBuilder ssb = new SpannableStringBuilder();
     int len = 0;
-    final StyleSpan bss = new StyleSpan(android.graphics.Typeface.BOLD);
-    final StyleSpan iss = new StyleSpan(android.graphics.Typeface.ITALIC);
 
     ssb.append(getString(R.string.gps_loc1));
     len = ssb.length();
     ssb.append(" " + String.valueOf(here.latitude));
-    ssb.setSpan(iss, len, ssb.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-    ssb.setSpan(bss, len, ssb.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+    ssb.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), len, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    ssb.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), len, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     ssb.append(" " + getString(R.string.gps_loc2));
     len = ssb.length();
     ssb.append(" " + String.valueOf(here.longitude));
-    ssb.setSpan(iss, len, ssb.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-    ssb.setSpan(bss, len, ssb.length(), Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+    ssb.setSpan(new StyleSpan(android.graphics.Typeface.ITALIC), len, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+    ssb.setSpan(new StyleSpan(android.graphics.Typeface.BOLD), len, ssb.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
     ssb.append("\n\n");
     ssb.append(getText(R.string.gps_part1) + " ");
     len = ssb.length();
     ssb.append(String.valueOf(dist));
-    ssb.setSpan(new ForegroundColorSpan(Color.BLACK), len, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    ssb.setSpan(new ForegroundColorSpan(Color.WHITE), len, ssb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     ssb.append(" " + getText(R.string.gps_part2));
     len = ssb.length();
     ssb.append(" " + getString(R.string.gps_part3));

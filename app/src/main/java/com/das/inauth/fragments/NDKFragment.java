@@ -1,5 +1,6 @@
 package com.das.inauth.fragments;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageStatsObserver;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.os.RemoteException;
 import android.os.UserHandle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -89,7 +91,9 @@ public class NDKFragment extends Fragment
       appNameList.add(applicationName);
       String packageName = pkgAppsList.get(index).activityInfo.packageName;
       PackageStats packageStats = new PackageStats(packageName);
-      getPackageSizeInfo(packageName);
+      if (!getPackageSizeInfo(packageName)) {
+        break;
+      }
       index++;
     }
 
@@ -99,7 +103,7 @@ public class NDKFragment extends Fragment
     return view;
   }
 
-  private void getPackageSizeInfo(final String packageName) {
+  private boolean getPackageSizeInfo(final String packageName) {
     try {
 
       Class<?> clz = packageManager.getClass();
@@ -119,8 +123,19 @@ public class NDKFragment extends Fragment
     } catch (Exception ex) {
       Log.e(TAG, "NoSuchMethodException");
       ex.printStackTrace();
+      AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+      builder.setTitle(R.string.alert)
+              .setMessage(R.string.not_available)
+              .setPositiveButton(R.string.OK, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                  dialogInterface.dismiss();
+                  mainActivity.onBackPressed();
+                }
+              }).show();
+      return false;
     }
-
+    return true;
   }
 
   @Override

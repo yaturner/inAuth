@@ -1,6 +1,6 @@
 package com.das.inauth;
 
-import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
   private LatLng currentLocation = null;
   private SimpleLocation location;
 
+  private ProgressDialog progressDialog = null;
+
   public static MainActivity getInstance() {
     return _instance;
   }
@@ -59,34 +61,17 @@ public class MainActivity extends AppCompatActivity {
       return;
     }
 
+    progressDialog = new ProgressDialog(this);
+
     // Application permissioms
-    if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-            ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+    if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
       // Should we show an explanation?
       if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-              android.Manifest.permission.ACCESS_FINE_LOCATION) ||
-              ActivityCompat.shouldShowRequestPermissionRationale(this,
-                      android.Manifest.permission.ACCESS_FINE_LOCATION) ||
-              ActivityCompat.shouldShowRequestPermissionRationale(this,
-                      Manifest.permission.CALL_PHONE)) {
-
-        // Show an explanation to the user *asynchronously* -- don't block
-        // this thread waiting for the user's response! After the user
-        // sees the explanation, try again to request the permission.
-
+              android.Manifest.permission.ACCESS_FINE_LOCATION)) {
       } else {
-
-        // No explanation needed, we can request the permission.
-
         ActivityCompat.requestPermissions(this,
                 new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                 Constants.MY_PERMISSIONS_ACCESS_FINE_LOCATION);
-
-        ActivityCompat.requestPermissions(this,
-                new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                Constants.MY_PERMISSIONS_ACCESS_COURSE_LOCATION);
-
       }
     } else {
       locationEnabled = true;
@@ -168,4 +153,22 @@ public class MainActivity extends AppCompatActivity {
 
     return activeNetworkInfo != null && activeNetworkInfo.isConnected();
   }
+
+  public void showProgressDialog(final String str) {
+    if (!progressDialog.isShowing()) {
+      progressDialog.setMessage(str);
+      progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+      progressDialog.setIndeterminate(true);
+      progressDialog.setCancelable(false);
+      progressDialog.setCanceledOnTouchOutside(false);
+      progressDialog.show();
+    }
+  }
+
+  public void dismissProgressDialog() {
+    if (progressDialog.isShowing()) {
+      progressDialog.dismiss();
+    }
+  }
+
 }
