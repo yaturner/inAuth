@@ -10,13 +10,14 @@ Java_com_das_inauth_MainActivity_stringFromJNI(
 
     size_t len = env->GetStringLength(target);
     char *result = (char *) malloc(len + 1);
-    strcpy(result, env->GetStringUTFChars(target, 0));
+    const char *temp = env->GetStringUTFChars(target, 0);
+    strcpy(result, temp);
 
     for (int index = 0; index < len; index++) {
         if (result[index] == 'a') {
             result[index] = '4';
         }
     }
-
+    env->ReleaseStringUTFChars(target, temp);
     return env->NewStringUTF(result);
 }
